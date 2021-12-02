@@ -15,7 +15,6 @@ pub fn toStrSlice(string: []const u8, delim: []const u8) ![][]const u8 {
     var list = List([]const u8).init(gpa);
 
     var it = std.mem.split(string, delim);
-    var index: usize = 0;
     while (it.next()) |line| {
         if (line.len == 0) continue;
         try list.append(line);
@@ -28,10 +27,44 @@ pub fn toIntSlice(comptime T: type, string: []const u8, delim: []const u8) ![]T 
     var list = List(T).init(gpa);
 
     var it = std.mem.split(string, delim);
-    var index: usize = 0;
     while (it.next()) |line| {
         if (line.len == 0) continue;
         try list.append(try std.fmt.parseInt(T, line, 10));
+    }
+
+    return list.toOwnedSlice();
+}
+
+pub fn toSliceOf(comptime T: type, string: []const u8, delim: []const u8) ![]T {
+    const info = @typeInfo(T).Struct;
+
+    var list = List(T).init(gpa);
+    var it = std.mem.split(string, delim);
+    while (it.next()) |line| {
+        if (line.len == 0) continue;
+
+        var split = std.mem.split(line, " ");
+        var item: T = undefined;
+
+        inline for (info.fields) |field| {
+            var s = split.next() orelse break;
+
+            switch (@typeInfo(field.field_type)) {
+                .Int => {
+                    @field(item, field.name) = try std.fmt.parseInt(field.field_type, s, 10);
+                },
+                .Float => {
+                    @field(item, field.name) = try std.fmt.parseFloat(field.field_type, s, 10);
+                },
+                .Pointer => |p| {
+                    if (p.child != u8) @compileLog("unsupported type");
+                    @field(item, field.name) = s;
+                },
+                else => @compileError("unsupported type"),
+            }
+        }
+
+        try list.append(item);
     }
 
     return list.toOwnedSlice();
