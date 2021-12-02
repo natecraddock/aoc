@@ -16,6 +16,7 @@ const data = @embedFile("../data/day02.txt");
 pub fn main() !void {
     var h: i32 = 0;
     var v: i32 = 0;
+    var v2: i32 = 0;
     var a: i32 = 0;
 
     var lines = try util.toStrSlice(data, "\n");
@@ -26,13 +27,16 @@ pub fn main() !void {
 
         if (std.mem.eql(u8, dir, "forward")) {
             h += val;
-            v += a * val;
+            v2 += a * val;
         } else if (std.mem.eql(u8, dir, "down")) {
+            v += val;
             a += val;
         } else if (std.mem.eql(u8, dir, "up")) {
+            v -= val;
             a -= val;
         }
     }
 
     print("{d}\n", .{h * v});
+    print("{d}\n", .{h * v2});
 }
