@@ -35,7 +35,7 @@ pub fn main() !void {
         }
     }
 
-    var numWinners: usize = 0;
+    var num_winners: usize = 0;
     for (numbers) |num| {
         for (boards.items) |*b, i| {
             if (winners.items[i]) continue;
@@ -45,9 +45,9 @@ pub fn main() !void {
         for (boards.items) |b, i| {
             if (winners.items[i]) continue;
             if (checkBoard(b)) {
-                numWinners += 1;
-                if (numWinners == 1) print("{d}\n", .{sumBoard(b) * num});
-                if (numWinners == boards.items.len) print("{d}\n", .{sumBoard(b) * num});
+                num_winners += 1;
+                if (num_winners == 1) print("{d}\n", .{sumBoard(b) * num});
+                if (num_winners == boards.items.len) print("{d}\n", .{sumBoard(b) * num});
                 winners.items[i] = true;
             }
         }
