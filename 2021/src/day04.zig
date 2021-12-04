@@ -17,8 +17,9 @@ pub fn main() !void {
     var lines = try util.toStrSlice(data, "\n");
     var numbers = try util.toIntSlice(u8, lines[0], ",");
 
-    var boards = List([5][5]?u8).init(gpa);
-    var winners = List(bool).init(gpa);
+    var boards = List(?[5][5]?u8).init(gpa);
+    defer boards.deinit();
+
     var board: [5][5]?u8 = undefined;
     for (lines[1..]) |line, i| {
         var row = try util.toStrSlice(line, " ");
@@ -31,24 +32,23 @@ pub fn main() !void {
 
         if (i % 5 == 4) {
             try boards.append(board);
-            try winners.append(false);
         }
     }
 
     var num_winners: usize = 0;
     for (numbers) |num| {
         for (boards.items) |*b, i| {
-            if (winners.items[i]) continue;
-            markBoard(b, num);
+            if (b.* == null) continue;
+            markBoard(&b.*.?, num);
         }
 
-        for (boards.items) |b, i| {
-            if (winners.items[i]) continue;
-            if (checkBoard(b)) {
+        for (boards.items) |*b, i| {
+            if (b.* == null) continue;
+            if (checkBoard(b.*.?)) {
                 num_winners += 1;
-                if (num_winners == 1) print("{d}\n", .{sumBoard(b) * num});
-                if (num_winners == boards.items.len) print("{d}\n", .{sumBoard(b) * num});
-                winners.items[i] = true;
+                if (num_winners == 1) print("{d}\n", .{sumBoard(b.*.?) * num});
+                if (num_winners == boards.items.len) print("{d}\n", .{sumBoard(b.*.?) * num});
+                b.* = null;
             }
         }
     }
