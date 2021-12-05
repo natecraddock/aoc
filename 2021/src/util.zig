@@ -35,36 +35,38 @@ pub fn toIntSlice(comptime T: type, string: []const u8, delim: []const u8) ![]T 
     return list.toOwnedSlice();
 }
 
-pub fn toSliceOf(comptime T: type, string: []const u8, delim: []const u8) ![]T {
+pub fn parseInto(comptime T: type, string: []const u8, delim: []const u8) !T {
     const info = @typeInfo(T).Struct;
 
+    var split = std.mem.split(string, delim);
+    var item: T = undefined;
+    inline for (info.fields) |field| {
+        var s = split.next() orelse break;
+        switch (@typeInfo(field.field_type)) {
+            .Int => {
+                @field(item, field.name) = try std.fmt.parseInt(field.field_type, s, 10);
+            },
+            .Float => {
+                @field(item, field.name) = try std.fmt.parseFloat(field.field_type, s, 10);
+            },
+            .Pointer => |p| {
+                if (p.child != u8) @compileLog("unsupported type");
+                @field(item, field.name) = s;
+            },
+            else => @compileError("unsupported type"),
+        }
+    }
+
+    return item;
+}
+
+pub fn toSliceOf(comptime T: type, string: []const u8, delim: []const u8) ![]T {
     var list = List(T).init(gpa);
-    var it = std.mem.split(string, delim);
+    // assume lines
+    var it = std.mem.split(string, "\n");
     while (it.next()) |line| {
         if (line.len == 0) continue;
-
-        var split = std.mem.split(line, " ");
-        var item: T = undefined;
-
-        inline for (info.fields) |field| {
-            var s = split.next() orelse break;
-
-            switch (@typeInfo(field.field_type)) {
-                .Int => {
-                    @field(item, field.name) = try std.fmt.parseInt(field.field_type, s, 10);
-                },
-                .Float => {
-                    @field(item, field.name) = try std.fmt.parseFloat(field.field_type, s, 10);
-                },
-                .Pointer => |p| {
-                    if (p.child != u8) @compileLog("unsupported type");
-                    @field(item, field.name) = s;
-                },
-                else => @compileError("unsupported type"),
-            }
-        }
-
-        try list.append(item);
+        try list.append(try parseInto(T, line, delim));
     }
 
     return list.toOwnedSlice();

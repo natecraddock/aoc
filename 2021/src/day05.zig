@@ -26,6 +26,9 @@ fn update(map: *Map(Point, usize), p: Point) !void {
 }
 
 fn interpolate(map: *Map(Point, usize), a: []const u8, b: []const u8, diag: bool) !void {
+    // this util function would be better now that it exists
+    // var first = try util.parseInto(Point, a, ",");
+    // var second = try util.parseInto(Point, b, ",");
     var first = try Point.fromStr(a);
     var second = try Point.fromStr(b);
 
