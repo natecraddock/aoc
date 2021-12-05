@@ -58,10 +58,11 @@ fn interpolate(map: *Map(Point, usize), a: []const u8, b: []const u8, diag: bool
 }
 
 pub fn main() !void {
+    var lines = try util.toStrSlice(data, "\n");
+
     {
         // no diagonals
         var counts = Map(Point, usize).init(gpa);
-        var lines = try util.toStrSlice(data, "\n");
         for (lines) |line| {
             var d = try util.toStrSlice(line, " -> ");
             try interpolate(&counts, d[0], d[1], false);
@@ -79,7 +80,6 @@ pub fn main() !void {
     {
         // now consider diagonals
         var counts = Map(Point, usize).init(gpa);
-        var lines = try util.toStrSlice(data, "\n");
         for (lines) |line| {
             var d = try util.toStrSlice(line, " -> ");
             try interpolate(&counts, d[0], d[1], true);
