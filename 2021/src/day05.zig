@@ -10,11 +10,6 @@ const data = @embedFile("../data/day05.txt");
 const Point = struct {
     x: i32,
     y: i32,
-
-    pub fn fromStr(str: []const u8) !Point {
-        var parsed = try util.toIntSlice(i32, str, ",");
-        return Point{ .x = parsed[0], .y = parsed[1] };
-    }
 };
 
 fn update(map: *Map(Point, usize), p: Point) !void {
@@ -26,11 +21,8 @@ fn update(map: *Map(Point, usize), p: Point) !void {
 }
 
 fn interpolate(map: *Map(Point, usize), a: []const u8, b: []const u8, diag: bool) !void {
-    // this util function would be better now that it exists
-    // var first = try util.parseInto(Point, a, ",");
-    // var second = try util.parseInto(Point, b, ",");
-    var first = try Point.fromStr(a);
-    var second = try Point.fromStr(b);
+    var first = try util.parseInto(Point, a, ",");
+    var second = try util.parseInto(Point, b, ",");
 
     if (first.x == second.x) {
         var y = first.y;

@@ -11,6 +11,22 @@ const Str = []const u8;
 var gpa_impl = std.heap.GeneralPurposeAllocator(.{}){};
 pub const gpa = &gpa_impl.allocator;
 
+pub fn Counter(comptime T: type) type {
+    return struct {
+        counter: Map(T, usize),
+
+        pub fn init(allocator: *Allocator) @This() {
+            return .{ .counter = Map(T, usize).init(allocator) };
+        }
+
+        pub fn add(self: *@This(), val: T) !void {
+            if (self.counter.get(val)) |count| {
+                try self.counter.put(val, count + 1);
+            } else try self.counter.put(val, 1);
+        }
+    };
+}
+
 pub fn toStrSlice(string: []const u8, delim: []const u8) ![][]const u8 {
     var list = List([]const u8).init(gpa);
 
