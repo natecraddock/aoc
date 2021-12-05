@@ -5,10 +5,6 @@ const LibExeObjStep = std.build.LibExeObjStep;
 // set this to true to link libc
 const should_link_libc = false;
 
-const test_files = [_][]const u8{
-    // list any zig files with tests here
-};
-
 fn linkObject(b: *Builder, obj: *LibExeObjStep) void {
     if (should_link_libc) obj.linkLibC();
     _ = b;
@@ -61,16 +57,5 @@ pub fn build(b: *Builder) void {
         const run_step = b.step(dayString, run_desc);
         run_step.dependOn(&run_cmd.step);
         run_all.dependOn(&run_cmd.step);
-    }
-
-    // Set up a step to run all tests
-    const test_step = b.step("test", "Run all tests");
-    for (test_files) |file| {
-        const test_cmd = b.addTest(file);
-        test_cmd.setTarget(target);
-        test_cmd.setBuildMode(mode);
-        linkObject(b, test_cmd);
-
-        test_step.dependOn(&test_cmd.step);
     }
 }
