@@ -1,12 +1,5 @@
 const std = @import("std");
-const Allocator = std.mem.Allocator;
-const assert = std.debug.assert;
 const print = std.debug.print;
-const List = std.ArrayList;
-const Map = std.AutoHashMap;
-const StrMap = std.StringHashMap;
-const BitSet = std.DynamicBitSet;
-const Str = []const u8;
 
 const util = @import("util.zig");
 const gpa = util.gpa;
@@ -61,11 +54,9 @@ pub fn main() !void {
         var count: usize = 0;
         for (items) |item, j| {
             if (ignore1[j]) continue;
-            print("{s}\n", .{item});
             if (item[i] == '0') count += 1;
         }
         var consider: u8 = undefined;
-        print("{d} {d}\n", .{ left, count });
         if (left % 2 == 0 and count == left / 2) {
             consider = '0';
         } else if (count > left / 2) {
@@ -83,7 +74,6 @@ pub fn main() !void {
             if (!ignore1[j]) left += 1;
         }
 
-        print("\n", .{});
         if (left == 1) break;
     }
 
@@ -93,7 +83,6 @@ pub fn main() !void {
     }
 
     var ls = num(items[idx]);
-    print("{d} {d}\n", .{ idx, ls });
 
     i = 0;
     var ignore2: [1000]bool = [_]bool{false} ** 1000;
