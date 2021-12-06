@@ -45,7 +45,7 @@ pub fn toIntSlice(comptime T: type, string: []const u8, delim: []const u8) ![]T 
     var it = std.mem.split(string, delim);
     while (it.next()) |line| {
         if (line.len == 0) continue;
-        try list.append(try std.fmt.parseInt(T, line, 10));
+        try list.append(try std.fmt.parseInt(T, std.mem.trim(u8, line, "\n"), 10));
     }
 
     return list.toOwnedSlice();
