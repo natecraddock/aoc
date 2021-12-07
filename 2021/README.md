@@ -18,6 +18,7 @@ solution that solution is included and noted as a later attempt.
 * [Day 04](https://github.com/natecraddock/aoc/blob/master/2021/src/day04.zig)
 * [Day 05](https://github.com/natecraddock/aoc/blob/master/2021/src/day05.zig)
 * [Day 06](https://github.com/natecraddock/aoc/blob/master/2021/src/day06.zig)
+* [Day 07](https://github.com/natecraddock/aoc/blob/master/2021/src/day07.zig)
 
 See the
 [`src/util.zig`](https://github.com/natecraddock/aoc/blob/master/2021/src/util.zig)
