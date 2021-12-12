@@ -11,6 +11,10 @@ const Str = []const u8;
 var gpa_impl = std.heap.GeneralPurposeAllocator(.{}){};
 pub const gpa = &gpa_impl.allocator;
 
+pub fn streq(a: []const u8, b: []const u8) bool {
+    return std.mem.eql(u8, a, b);
+}
+
 pub fn Counter(comptime T: type) type {
     return struct {
         counter: Map(T, usize),
