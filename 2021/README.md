@@ -22,7 +22,7 @@ solution that solution is included and noted as a later attempt.
 * [Day 08](https://github.com/natecraddock/aoc/blob/master/2021/src/day08.zig)
 * [Day 09](https://github.com/natecraddock/aoc/blob/master/2021/src/day09.zig)
 * [Day 10](https://github.com/natecraddock/aoc/blob/master/2021/src/day10.zig)
-* Day 11 *due to a git error I lost this code and have to recreate it...*
+* [Day 11](https://github.com/natecraddock/aoc/blob/master/2021/src/day11.zig)
 * [Day 12](https://github.com/natecraddock/aoc/blob/master/2021/src/day12.zig)
 
 See the
