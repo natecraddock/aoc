@@ -23,6 +23,10 @@ pub fn Counter(comptime T: type) type {
             return .{ .counter = Map(T, usize).init(allocator) };
         }
 
+        pub fn deinit(self: *@This()) void {
+            self.counter.deinit();
+        }
+
         pub fn add(self: *@This(), val: T) !void {
             if (self.counter.get(val)) |count| {
                 try self.counter.put(val, count + 1);
