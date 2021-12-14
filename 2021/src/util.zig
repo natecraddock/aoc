@@ -4,6 +4,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const List = std.ArrayList;
 const Map = std.AutoHashMap;
+const ArrayMap = std.AutoArrayHashMap;
 const StrMap = std.StringHashMap;
 const BitSet = std.DynamicBitSet;
 const Str = []const u8;
@@ -15,22 +16,30 @@ pub fn streq(a: []const u8, b: []const u8) bool {
     return std.mem.eql(u8, a, b);
 }
 
-pub fn Counter(comptime T: type) type {
+pub fn Counter(comptime K: type) type {
     return struct {
-        counter: Map(T, usize),
+        counter: ArrayMap(K, usize),
 
         pub fn init(allocator: *Allocator) @This() {
-            return .{ .counter = Map(T, usize).init(allocator) };
+            return .{ .counter = ArrayMap(K, usize).init(allocator) };
         }
 
         pub fn deinit(self: *@This()) void {
             self.counter.deinit();
         }
 
-        pub fn add(self: *@This(), val: T) !void {
-            if (self.counter.get(val)) |count| {
-                try self.counter.put(val, count + 1);
-            } else try self.counter.put(val, 1);
+        pub fn add(self: *@This(), key: K) !void {
+            var gop = try self.counter.getOrPut(key);
+            if (gop.found_existing) {
+                gop.value_ptr.* += 1;
+            } else gop.value_ptr.* = 1;
+        }
+
+        pub fn addCount(self: *@This(), key: K, c: usize) !void {
+            var gop = try self.counter.getOrPut(key);
+            if (gop.found_existing) {
+                gop.value_ptr.* += c;
+            } else gop.value_ptr.* = c;
         }
     };
 }
@@ -68,7 +77,7 @@ pub fn parseInto(comptime T: type, string: []const u8, delim: []const u8) !T {
         var s = split.next() orelse break;
         switch (@typeInfo(field.field_type)) {
             .Int => {
-                @field(item, field.name) = try std.fmt.parseInt(field.field_type, s, 10);
+                @field(item, field.name) = std.fmt.parseInt(field.field_type, s, 10) catch |err| s[0];
             },
             .Float => {
                 @field(item, field.name) = try std.fmt.parseFloat(field.field_type, s, 10);
