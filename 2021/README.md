@@ -24,6 +24,11 @@ solution that solution is included and noted as a later attempt.
 * [Day 10](https://github.com/natecraddock/aoc/blob/master/2021/src/day10.zig)
 * [Day 11](https://github.com/natecraddock/aoc/blob/master/2021/src/day11.zig)
 * [Day 12](https://github.com/natecraddock/aoc/blob/master/2021/src/day12.zig)
+* [Day 13](https://github.com/natecraddock/aoc/blob/master/2021/src/day13.zig)
+* [Day 14](https://github.com/natecraddock/aoc/blob/master/2021/src/day14.zig)
+* [Day 15](https://github.com/natecraddock/aoc/blob/master/2021/src/day14.zig)
+* ~~[Day16](https://github.com/natecraddock/aoc/blob/master/2021/src/day16.zig)~~
+* [Day 17](https://github.com/natecraddock/aoc/blob/master/2021/src/day17.zig)
 
 See the
 [`src/util.zig`](https://github.com/natecraddock/aoc/blob/master/2021/src/util.zig)
