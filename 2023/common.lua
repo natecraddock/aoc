@@ -10,6 +10,19 @@ function common.readlines(path, fn)
     return tbl
 end
 
+function common.gcd(a, b)
+    if a == 0 then
+        return b
+    end
+    return common.gcd(b % a, a)
+end
+
+function common.lcm(a, b)
+    return (a // common.gcd(a, b)) * b
+end
+
+-- monkey patch table
+
 function table.len(tbl)
     local len = 0
     for _ in pairs(tbl) do len = len + 1 end
