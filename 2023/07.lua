@@ -33,6 +33,18 @@ local data = common.readlines('data/07.txt', function(line)
         end
     end
 
+    -- part 2
+    if hand['J'] and hand['J'] < 5 then
+        local max = { val = 0 }
+        for k, v in pairs(hand) do
+            if k ~= 'J' and v > max.val then
+                max = { val = v, card = k }
+            end
+        end
+        hand[max.card] = hand[max.card] + hand['J']
+        hand['J'] = nil
+    end
+
     local type = 1
     if eql(hand, { 5 }) then
         type = 7
@@ -51,7 +63,7 @@ local data = common.readlines('data/07.txt', function(line)
     return { str = hand_str, type = type, bid = tonumber(bid) }
 end)
 
-local order = { A = 14, K = 13, Q = 12, J = 11, T = 10 }
+local order = { A = 14, K = 13, Q = 12, J = 0, T = 10 }
 local function cmp(a, b)
     a = tonumber(a) or order[a]
     b = tonumber(b) or order[b]
