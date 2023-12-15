@@ -10,6 +10,13 @@ function common.readlines(path, fn)
     return tbl
 end
 
+function common.readall(path)
+    local f = io.open(path, 'r')
+    local contents = f:read('a')
+    f:close()
+    return contents:sub(1, #contents - 1)
+end
+
 function common.gcd(a, b)
     if a == 0 then
         return b
@@ -95,6 +102,15 @@ function table.sum(tbl)
         sum = sum + tbl[i]
     end
     return sum
+end
+
+function table.find(tbl, item, f)
+    for i, value in ipairs(tbl) do
+        if f and f(value) or value == item then
+            return i
+        end
+    end
+    return nil
 end
 
 -- monkey patch string
