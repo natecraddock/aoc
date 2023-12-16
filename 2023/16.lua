@@ -24,14 +24,14 @@ local function simulate(y, x, vy, vx)
         for _, beam in ipairs(beams) do
             -- out of bounds
             if beam.y < 1 or beam.y > #grid or beam.x < 1 or beam.x > #grid[beam.y] then
-                goto continue
+                goto skip
             end
 
             local cell = grid[beam.y][beam.x]
             visited[beam.y .. ',' .. beam.x] = true
 
             if cell ~= '.' and events[beam.y][beam.x][beam.vy .. ',' .. beam.vx] then
-                goto continue
+                goto skip
             elseif cell ~= '.' then
                 events[beam.y][beam.x][beam.vy .. ',' .. beam.vx] = true
             end
@@ -73,7 +73,7 @@ local function simulate(y, x, vy, vx)
 
             table.insert(new_beams, beam)
 
-            ::continue::
+            ::skip::
         end
 
         beams = new_beams
@@ -88,15 +88,11 @@ print(simulate(1, 1, 0, 1))
 -- part 2
 local max = 0
 for y = 1, #grid do
-    local count = simulate(y, 1, 0, 1)
-    if count > max then max = count end
-    count = simulate(y, #grid[1], 0, -1)
-    if count > max then max = count end
+    max = math.max(max, simulate(y, 1, 0, 1))
+    max = math.max(max, simulate(y, #grid[1], 0, -1))
 end
 for x = 1, #grid[1] do
-    local count = simulate(1, x, 1, 0)
-    if count > max then max = count end
-    count = simulate(#grid, x, -1, 0)
-    if count > max then max = count end
+    max = math.max(max, simulate(1, x, 1, 0))
+    max = math.max(max, simulate(#grid, x, -1, 0))
 end
 print(max)
